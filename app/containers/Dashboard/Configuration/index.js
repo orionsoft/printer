@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { connect } from 'react-redux'
-import { loadConfig, saveConfig, pingServer } from '../../../actions/actions'
+import { loadConfig, saveConfig, pingServer, testPrinter } from '../../../actions/actions'
 import { Select, Text } from '../../../components/Fields'
 import Form from '../../../components/Form'
 import styles from './styles.scss'
@@ -81,6 +81,11 @@ class Configuration extends React.Component {
 			})
 	}
 
+	testPrinter = async (printer, event) => {
+		event.preventDefault()
+		testPrinter(printer)
+	}
+
 	render() {
 		return (
 			<Form header="Configuración" handleSubmit={this.handleSubmit}>
@@ -91,6 +96,13 @@ class Configuration extends React.Component {
 					options={this.props.printers}
 					onChange={this.handleChange}
 				/>
+				<div className={styles.submitContainer}>
+					<div className={styles.submitLabel}>
+						<div className={styles.placementFixer}>
+							<input type="submit" value="Probar impresora" onClick={event => this.testPrinter(this.state.documentPrinter, event)} />
+						</div>
+					</div>
+				</div>
 				<Select
 					name="receiptPrinter"
 					label="Impresora de Boletas"
@@ -98,6 +110,13 @@ class Configuration extends React.Component {
 					options={this.props.printers}
 					onChange={this.handleChange}
 				/>
+				<div className={styles.submitContainer}>
+					<div className={styles.submitLabel}>
+						<div className={styles.placementFixer}>
+							<input type="submit" value="Probar impresora" onClick={event => this.testPrinter(this.state.receiptPrinter, event)} />
+						</div>
+					</div>
+				</div>
 				<Text
 					name="port"
 					label="Puerto"

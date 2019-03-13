@@ -1,6 +1,7 @@
 // @flow
 import * as types from './action-types'
 import { db, printers } from '../helpers'
+import printer from 'node-thermal-printer'
 
 // GLOBAL action creators
 export const loadColorMode = () => async dispatch => {
@@ -82,6 +83,37 @@ export const pingServer = port => async dispatch => {
 	} catch (err) {
 		console.log('Err:', err)
 	}
+}
+
+
+export const testPrinter = printer => {
+	printer.init({
+    type: 'epson',
+    characterSet: 'CHARCODE_LATINA',
+    interface: `printer:${printerName}`,
+    replaceSpecialCharacters: true
+  })
+
+  printer.alignCenter()
+  const barcodeData = 'hello world'
+  const type = 74
+  const settings = {
+    hriPos: 2, // Human readable character 0 - 3 (none, top, bottom, both)
+    hriFont: 0, // Human readable character font
+    width: 4, // Barcode width
+    height: 160 // Barcode height
+  }
+  printer.printBarcode(barcodeData, type, settings)
+  printer.alignLeft()
+  printer.newLine()
+  printer.println(`Orden de Trabajo: ${data.otId}`)
+  printer.partialCut()
+
+  printer.execute(err => {
+    if (err) return alert(err.message)
+
+    return alert('ok')
+  })
 }
 
 // type: types.PING_SERVER
